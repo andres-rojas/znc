@@ -14,7 +14,7 @@ ConnectDelay = 5
 ServerThrottle = 30
 Skin         = <%= node['znc']['skin'] %>
 StatusPrefix = *
-<% node['znc']['modules'].each do |mod,params| -%>
+<% node['znc']['modules'].each do |mod, params| -%>
 LoadModule   = <%= "#{mod} #{params}".strip  %>
 <% end -%>
 
@@ -45,12 +45,12 @@ LoadModule   = <%= "#{mod} #{params}".strip  %>
 
 	Allow = *
 
-  <% Array(u['znc']['modules']).each do |mod,params| -%>
+  <% Array(u['znc']['modules']).each do |mod, params| -%>
 	LoadModule = <%= "#{mod} #{params}".strip  %>
   <% end -%>
 
 	Server = <%= u['znc']['server'] %>
-<% Array(u['znc']['channels']).each do |chan,options| -%>
+<% Array(u['znc']['channels']).each do |chan, options| -%>
 
 	<Chan <%= chan %>>
 	</Chan>

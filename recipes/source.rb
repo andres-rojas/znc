@@ -22,9 +22,9 @@ configure_options = node['znc']['configure_options'].join(' ')
 include_recipe 'build-essential'
 
 pkgs = value_for_platform(
-    [ 'debian', 'ubuntu' ] =>
-        {'default' => %w{ libssl-dev libperl-dev pkg-config libc-ares-dev }},
-    'default' => %w{ libssl-dev libperl-dev pkg-config libc-ares-dev }
+    %w( debian ubuntu ) =>
+        { 'default' => %w( libssl-dev libperl-dev pkg-config libc-ares-dev ) },
+    'default' => %w( libssl-dev libperl-dev pkg-config libc-ares-dev )
   )
 
 pkgs.each do |pkg|

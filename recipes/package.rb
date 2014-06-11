@@ -22,10 +22,10 @@ when 'macosx'
   # TODO: install via homebrew
 else
   znc_pkgs = value_for_platform(
-    [ 'debian','ubuntu' ] => {
-      'default' => %w{ znc znc-dev znc-extra }# znc-webadmin}
+    %w( debian ubuntu ) => {
+      'default' => %w( znc znc-dev znc-extra )# znc-webadmin}
     },
-    'default' => %w{ znc znc-dev znc-extra }
+    'default' => %w( znc znc-dev znc-extra )
   )
 
   znc_pkgs.each do |pkg|

@@ -22,7 +22,7 @@
 remote_file "#{Chef::Config[:file_cache_path]}/colloquy.cpp" do
   source 'https://github.com/wired/colloquypush/raw/master/znc/colloquy.cpp'
   mode '0644'
-  not_if {::File.exists?("#{node['znc']['module_dir']}/colloquy.so")}
+  not_if { ::File.exist?("#{node['znc']['module_dir']}/colloquy.so") }
 end
 
 bash 'build colloquy znc module' do

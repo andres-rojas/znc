@@ -22,10 +22,10 @@ include_recipe "znc::#{node['znc']['install_method']}"
 user node['znc']['user']
 group node['znc']['group']
 
-[ node['znc']['data_dir'],
-  node['znc']['conf_dir'],
-  node['znc']['module_dir'],
-  node['znc']['users_dir']
+[node['znc']['data_dir'],
+ node['znc']['conf_dir'],
+ node['znc']['module_dir'],
+ node['znc']['users_dir']
 ].each do |dir|
   directory dir do
     owner node['znc']['user']
@@ -54,7 +54,8 @@ template '/etc/init.d/znc' do
   mode '0755'
 end
 
-users = node['znc']['users'] || search(:users, 'groups:znc') # ~FC003 alternative support for chef-solo
+# ~FC003 alternative support for chef-solo
+users = node['znc']['users'] || search(:users, 'groups:znc')
 
 # znc doesn't like to be automated...this prevents a race condition
 # http://wiki.znc.in/Configuration#Editing_config
@@ -76,12 +77,12 @@ template "#{node['znc']['data_dir']}/configs/znc.conf" do
   owner node['znc']['user']
   group node['znc']['group']
   variables(
-    :users => users
+    users: users
   )
   notifies :run, 'execute[reload-znc-config]', :immediately
 end
 
 service 'znc' do
-  supports :restart => true
+  supports restart: true
   action [:enable, :start]
 end
