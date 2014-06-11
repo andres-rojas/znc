@@ -32,6 +32,7 @@ platforms:
 suites:
 - name: default
   run_list:
+  - recipe[chef-solo-search]
   - recipe[znc]
   attributes:
     znc:
@@ -43,3 +44,10 @@ suites:
           ident: zman@example.com
           alt_nick: zman
           server: chat.freenode.net +7000
+- name: source
+  run_list:
+  - recipe[chef-solo-search]
+  - recipe[znc]
+  attributes:
+    znc:
+      install_method: source
