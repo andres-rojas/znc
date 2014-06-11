@@ -19,8 +19,8 @@
 
 default['znc']['install_method'] = 'package'
 
-case node["platform"]
-when "macosx"
+case node['platform']
+when 'macosx'
   set['znc']['data_dir'] = '$HOME/.znc'
 else
   set['znc']['data_dir'] = '/etc/znc'
@@ -34,7 +34,7 @@ default['znc']['module_dir']      = "#{znc['data_dir']}/modules"
 default['znc']['users_dir']       = "#{znc['data_dir']}/users"
 default['znc']['users']           = Chef::Config[:solo] ? [] : nil
 
-default['znc']['port']            = "+7777"
-default['znc']['skin']            = "dark-clouds"
+default['znc']['port']            = '+7777'
+default['znc']['skin']            = 'dark-clouds'
 default['znc']['max_buffer_size'] = 500
 default['znc']['modules']         = %w{ webadmin adminlog }

@@ -20,17 +20,17 @@
 # znc > 0.0.9 required...this means compiling from source on most platforms
 
 remote_file "#{Chef::Config[:file_cache_path]}/colloquy.cpp" do
-  source "https://github.com/wired/colloquypush/raw/master/znc/colloquy.cpp"
-  mode "0644"
+  source 'https://github.com/wired/colloquypush/raw/master/znc/colloquy.cpp'
+  mode '0644'
   not_if {::File.exists?("#{node['znc']['module_dir']}/colloquy.so")}
 end
 
-bash "build colloquy znc module" do
+bash 'build colloquy znc module' do
   cwd Chef::Config[:file_cache_path]
   code <<-EOF
   znc-buildmod colloquy.cpp
   mv colloquy.so #{node['znc']['module_dir']}/
   EOF
   creates "#{node['znc']['module_dir']}/colloquy.so"
-  notifies :run, "execute[reload-znc-config]", :immediately
+  notifies :run, 'execute[reload-znc-config]', :immediately
 end

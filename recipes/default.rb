@@ -33,7 +33,7 @@ group node['znc']['group']
   end
 end
 
-bash "generate-pem" do
+bash 'generate-pem' do
   cwd node['znc']['data_dir']
   code <<-EOH
   umask 077
@@ -47,41 +47,41 @@ bash "generate-pem" do
   creates "#{node['znc']['data_dir']}/znc.pem"
 end
 
-template "/etc/init.d/znc" do
-  source "znc.init.erb"
-  owner "root"
-  group "root"
-  mode "0755"
+template '/etc/init.d/znc' do
+  source 'znc.init.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
 end
 
 users = node['znc']['users'] || search(:users, 'groups:znc') # ~FC003 alternative support for chef-solo
 
 # znc doesn't like to be automated...this prevents a race condition
 # http://wiki.znc.in/Configuration#Editing_config
-execute "force-save-znc-config" do
-  command "pkill -SIGUSR1 znc"
+execute 'force-save-znc-config' do
+  command 'pkill -SIGUSR1 znc'
   action :run
-  only_if "pgrep znc"
+  only_if 'pgrep znc'
 end
-execute "reload-znc-config" do
-  command "pkill -SIGHUP znc"
+execute 'reload-znc-config' do
+  command 'pkill -SIGHUP znc'
   action :nothing
-  only_if "pgrep znc"
+  only_if 'pgrep znc'
 end
 
 # render znc.conf
 template "#{node['znc']['data_dir']}/configs/znc.conf" do
-  source "znc.conf.erb"
+  source 'znc.conf.erb'
   mode 0600
   owner node['znc']['user']
   group node['znc']['group']
   variables(
     :users => users
   )
-  notifies :run, "execute[reload-znc-config]", :immediately
+  notifies :run, 'execute[reload-znc-config]', :immediately
 end
 
-service "znc" do
+service 'znc' do
   supports :restart => true
   action [:enable, :start]
 end
