@@ -33,12 +33,14 @@ VERBOSE=yes
 # Read configuration variable file if it is present
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
+<% unless node.platform_family?('rhel') %>
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
+<% end %>
 
 # Define LSB log_* functions.
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
-. /lib/lsb/init-functions
+<%= node['znc']['init']['functions'] %>
 
 #
 # Function that starts the daemon/service
