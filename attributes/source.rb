@@ -18,7 +18,6 @@
 #
 
 default['znc']['url'] = 'http://znc.in/releases'
-default['znc']['version'] = '1.0'
-default['znc']['checksum'] =
-  'a85539da42697b26e4d46205def36bb799f83d6aeef401d53c49ee674142062a'
+default['znc']['version'] = '1.4'
+default['znc']['checksum'] = '6dafcf12b15fdb95eac5b427c8507c1095e904b4'
 default['znc']['configure_options'] = %W( --enable-extra )
