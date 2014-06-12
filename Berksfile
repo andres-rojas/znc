@@ -5,5 +5,5 @@ metadata
 group :integration do
   cookbook 'chef-solo-search'
   cookbook 'apt'
-  cookbook 'yum'
+  cookbook 'yum-epel'
 end
