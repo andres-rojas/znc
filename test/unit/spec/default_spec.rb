@@ -30,7 +30,7 @@ describe 'znc::default' do
   end
 
   [@data_dir, @conf_dir, @module_dir, @users_dir].each do |dir|
-    it "creates `#{dir}` with znc user/group" do
+    it dir do
       expect(chef_run).to create_directory(dir).with(
         owner: user,
         group: group
