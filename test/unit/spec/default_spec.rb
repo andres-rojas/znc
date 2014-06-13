@@ -2,11 +2,7 @@
 require_relative 'spec_helper'
 
 describe 'znc::default' do
-  let(:chef_run) do
-    stub_command('pgrep znc').and_return('')
-
-    ChefSpec::Runner.new.converge(described_recipe)
-  end
+  let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
 
   let(:install_method) { 'package' }
   let(:user)           { 'znc' }
@@ -17,6 +13,8 @@ describe 'znc::default' do
   dir[:conf]   = "#{dir[:data]}/configs"
   dir[:module] = "#{dir[:data]}/modules"
   dir[:users]  = "#{dir[:data]}/users"
+
+  before { stub_command('pgrep znc').and_return('') }
 
   it 'includes the `znc::{install_method}` recipe' do
     expect(chef_run).to include_recipe("znc::#{install_method}")
@@ -43,21 +41,33 @@ describe 'znc::default' do
     end
   end
 
-  it 'generates a pem file' do
-    expect(chef_run).to run_bash('generate-pem').with(
-      cwd: dir[:data],
-      user: user,
-      group: group,
-      creates: "#{dir[:data]}/znc.pem"
-    )
-  end
+  context 'generates config files' do
+    it 'pem' do
+      expect(chef_run).to run_bash('generate-pem').with(
+        cwd: dir[:data],
+        user: user,
+        group: group,
+        creates: "#{dir[:data]}/znc.pem"
+      )
+    end
 
-  it 'generates an init script' do
-    expect(chef_run).to create_template('/etc/init.d/znc').with(
-      source: 'znc.init.erb',
-      owner: 'root',
-      group: 'root',
-      mode: '0755'
-    )
+    it 'init' do
+      expect(chef_run).to create_template('/etc/init.d/znc').with(
+        source: 'znc.init.erb',
+        owner: 'root',
+        group: 'root',
+        mode: '0755'
+      )
+    end
+
+    it 'conf' do
+      expect(chef_run).to create_template("#{dir[:conf]}/znc.conf").with(
+        source: 'znc.conf.erb',
+        mode: '0600',
+        owner: user,
+        group: group,
+        variables: { users: [] }
+      )
+    end
   end
 end
