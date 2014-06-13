@@ -4,10 +4,10 @@ driver_config:
   require_chef_omnibus: true
 
 platforms:
-- name: ubuntu-12.10
+- name: ubuntu-14.04
   driver_config:
-    box: opscode-ubuntu-12.10
-    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.10_provisionerless.box
+    box: opscode-ubuntu-14.04
+    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-14.04_provisionerless.box
   run_list:
   - recipe[apt]
 - name: ubuntu-12.04
@@ -22,6 +22,12 @@ platforms:
     box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-10.04_provisionerless.box
   run_list:
   - recipe[apt]
+- name: centos-6.5
+  driver_config:
+    box: opscode-centos-6.5
+    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_centos-6.5_provisionerless.box
+  run_list:
+  - recipe[yum-epel]
 - name: centos-6.4
   driver_config:
     box: opscode-centos-6.4

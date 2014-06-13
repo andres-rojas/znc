@@ -23,10 +23,17 @@ when 'macosx'
 else
   znc_pkgs = value_for_platform(
     %w( debian ubuntu ) => {
-      'default' => %w( znc znc-dev znc-extra )# znc-webadmin}
+      'default' => %w( znc znc-dev znc-extra znc-webadmin )
     },
     'default' => %w( znc znc-devel )
   )
+
+  if node['platform'] == 'ubuntu'
+    os_version = node['platform_version'].to_f
+
+    znc_pkgs.delete('znc-extra')    if os_version >= 14.04
+    znc_pkgs.delete('znc-webadmin') if os_version > 10.04
+  end
 
   znc_pkgs.each do |pkg|
     package pkg do

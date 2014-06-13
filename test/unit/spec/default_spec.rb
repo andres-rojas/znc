@@ -6,12 +6,12 @@ describe 'znc::default' do
     {
       platform: 'ubuntu',
       platform_family: 'debian',
-      versions: %w( 10.04 12.04 )
+      versions: %w( 10.04 12.04 14.04 )
     },
     {
       platform: 'centos',
       platform_family: 'rhel',
-      versions: %w( 6.4 )
+      versions: %w( 6.4 6.5 )
     }
   ].each do |os|
     os[:versions].each do |os_version|
