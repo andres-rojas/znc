@@ -1,6 +1,7 @@
 # Encoding: utf-8
 require 'chefspec'
 require 'chefspec/berkshelf'
+require 'fauxhai'
 
 ::LOG_LEVEL = :fatal
 ::UBUNTU_OPTS = {
