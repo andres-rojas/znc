@@ -2,25 +2,14 @@
 require_relative 'spec_helper'
 
 describe 'znc::default' do
-  [
-    {
-      platform: 'ubuntu',
-      platform_family: 'debian',
-      versions: %w( 10.04 12.04 14.04 )
-    },
-    {
-      platform: 'centos',
-      platform_family: 'rhel',
-      versions: %w( 6.4 6.5 )
-    }
-  ].each do |os|
-    os[:versions].each do |os_version|
-      context "on #{os[:platform]} #{os_version}" do
+  PLATFORMS.each do |platform, versions|
+    versions.each do |version|
+      context "on #{platform} #{version}" do
         %w( package source ).each do |install_method|
           context "installed via #{install_method}" do
             let(:chef_run) do
-              ChefSpec::Runner.new do |node|
-                node.automatic['platform_family'] = os[:platform_family]
+              ChefSpec::Runner.new(platform: platform,
+                                   version: version) do |node|
                 node.set['znc']['install_method'] = install_method
               end.converge(described_recipe)
             end
@@ -37,7 +26,6 @@ describe 'znc::default' do
             let(:znc_conf_path) { "#{dir[:conf]}/znc.conf" }
 
             before do
-              Fauxhai.mock(platform: os[:platform], version: os_version)
               stub_command('pgrep znc').and_return('')
               stub_command('which znc').and_return('')
             end

@@ -1,7 +1,6 @@
 # Encoding: utf-8
 require 'chefspec'
 require 'chefspec/berkshelf'
-require 'fauxhai'
 
 ::LOG_LEVEL = :fatal
 ::UBUNTU_OPTS = {
@@ -11,6 +10,11 @@ require 'fauxhai'
 }
 ::CHEFSPEC_OPTS = {
   log_level: ::LOG_LEVEL
+}
+
+PLATFORMS = {
+  'ubuntu' => %w( 10.04 12.04 14.04 ),
+  'centos' => %w( 6.4 6.5 )
 }
 
 at_exit { ChefSpec::Coverage.report! }
