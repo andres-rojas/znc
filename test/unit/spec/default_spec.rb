@@ -26,8 +26,9 @@ describe 'znc::default' do
             let(:znc_conf_path) { "#{dir[:conf]}/znc.conf" }
 
             before do
-              stub_command('pgrep znc').and_return('')
-              stub_command('which znc').and_return('')
+              stub_command('pgrep znc').and_return('12345')
+              stub_command('which znc')
+                .and_return(nil) if install_method == 'source'
             end
 
             it "includes the `znc::#{install_method}` recipe" do
@@ -71,8 +72,18 @@ describe 'znc::default' do
               )
             end
 
-            it 'saves the config' do
-              expect(chef_run).to run_execute('force-save-znc-config')
+            context 'ZNC is running' do
+              it 'force save the config' do
+                expect(chef_run).to run_execute('force-save-znc-config')
+              end
+            end
+
+            context 'ZNC is not running' do
+              before { stub_command('pgrep znc').and_return(nil) }
+
+              it 'does not force save the config' do
+                expect(chef_run).to_not run_execute('force-save-znc-config')
+              end
             end
 
             it 'prepares to reload the config' do
