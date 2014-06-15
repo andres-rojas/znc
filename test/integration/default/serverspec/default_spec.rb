@@ -1,59 +1,30 @@
 require 'serverspec'
 
 include Serverspec::Helper::Exec
-include SpecInfra::Helper::Debian
+include Serverspec::Helper::DetectOS
 
-describe 'ZNC' do
-
-  user  = 'znc'
-  group = 'znc'
-
-  dir = Hash.new
-  dir[:data]   = '/etc/znc'
-  dir[:conf]   = "#{dir[:data]}/configs"
-  dir[:module] = "#{dir[:data]}/modules"
-  dir[:users]  = "#{dir[:data]}/users"
-
-  it 'is running' do
-    expect(command('pgrep znc')).to return_exit_status 0
+os = backend(Serverspec::Commands::Base).check_os[:family]
+packages =
+  case os
+  when 'Ubuntu', 'Debian'
+    %w( znc znc-dev znc-extra znc-webadmin )
+  else
+    %w( znc znc-devel )
   end
 
-  describe user(user) do
-    it { should exist }
-    it { should belong_to_group group }
-  end
+if os == 'Ubuntu'
+  os_version = `lsb_release -r | awk '{ print $2 }'`.to_f
 
-  describe group(group) do
-    it { should exist }
-  end
+  packages.delete('znc-extra')    if os_version >= 14.04
+  packages.delete('znc-webadmin') if os_version > 10.04
+end
 
-  dir.each do |type, path|
-    context "created the #{type} directory" do
-      describe file(path) do
-        it { should be_directory }
-        it { should be_owned_by user }
-        it { should be_grouped_into group }
-      end
+describe 'znc::package' do
+  packages.each do |package|
+    describe package(package) do
+      it { should be_installed }
     end
   end
-
-  describe file("#{dir[:data]}/znc.pem") do
-    it { should be_file }
-    it { should be_owned_by user }
-    it { should be_grouped_into group }
-  end
-
-  describe file('/etc/init.d/znc') do
-    it { should be_file }
-    it { should be_owned_by 'root' }
-    it { should be_grouped_into 'root' }
-    it { should be_mode 755 }
-  end
-
-  describe file("#{dir[:conf]}/znc.conf") do
-    it { should be_file }
-    it { should be_owned_by user }
-    it { should be_grouped_into group }
-    it { should be_mode 666 }
-  end
 end
+
+require_relative '_default'
