@@ -1,18 +1,14 @@
-require 'serverspec'
+require_relative 'spec_helper'
 
-include Serverspec::Helper::Exec
-include Serverspec::Helper::DetectOS
-
-os = backend(Serverspec::Commands::Base).check_os[:family]
 packages =
-  case os
+  case OS
   when 'Ubuntu', 'Debian'
     %w( znc znc-dev znc-extra znc-webadmin )
   else
     %w( znc znc-devel )
   end
 
-if os == 'Ubuntu'
+if OS == 'Ubuntu'
   os_version = `lsb_release -r | awk '{ print $2 }'`.to_f
 
   packages.delete('znc-extra')    if os_version >= 14.04
