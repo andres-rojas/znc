@@ -57,3 +57,11 @@ suites:
   attributes:
     znc:
       install_method: source
+      users:
+      - id: zeke
+        comment: Zeke Zeldman
+        znc:
+          pass: zeke123
+          ident: zman@example.com
+          alt_nick: zman
+          server: chat.freenode.net +7000
