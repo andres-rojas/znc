@@ -55,7 +55,12 @@ template '/etc/init.d/znc' do
 end
 
 # ~FC003 alternative support for chef-solo
-users = node['znc']['users'] || search(:users, 'groups:znc')
+if Chef::Config[:solo] &&
+    !run_context.cookbook_collection.include?('chef-solo-search')
+  users = node['znc']['users']
+else
+  users = node['znc']['users'] || search(:users, 'groups:znc')
+end
 
 # znc doesn't like to be automated...this prevents a race condition
 # http://wiki.znc.in/Configuration#Editing_config
