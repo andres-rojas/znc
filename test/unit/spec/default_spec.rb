@@ -93,7 +93,7 @@ describe 'znc::default' do
             it 'generates the config' do
               expect(chef_run).to create_template(znc_conf_path).with(
                 source: 'znc.conf.erb',
-                mode: '0600',
+                mode: '0666',
                 owner: user,
                 group: group,
                 variables: { users: [] }
