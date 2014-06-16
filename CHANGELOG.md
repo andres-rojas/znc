@@ -1,3 +1,7 @@
+# 0.2.1 (June 15, 2014)
+
+Added unit & integration tests with ChefSpec and Serverspec.
+
 # 0.2.0 (June 18, 2013)
 
 Incorporated [fnichol](https://github.com/fnichol)'s pull-requests:

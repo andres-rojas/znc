@@ -6,8 +6,13 @@ Installs and configures ZNC, an IRC bouncer.
 Usage
 =====
 
-**WARNING** - I am preparing to do a heavy refactoring on this cookbook! It will be
-rewritten using current cookbook development best practices.
+At least one user needs to be defined in either
+
+  - the `node[:znc][:users]` attribute
+  - or in a `users` data_bag
+
+Including `recipe[znc::default]` in your run-list will install ZNC
+via the target OS's package manager.
 
 Requirements
 ============
@@ -22,14 +27,18 @@ Tested on Chef 11 but newer and older version should work just fine. File an
 The following platforms have been tested with this cookbook, meaning that the
 recipes and LWRPs run on these platforms without error:
 
-* Ubuntu 10.04, 11.04, 12.04, 12.10
-* CentOS 6
+* Ubuntu 10.04, 12.04, 14.04
+
+CentOS 6 mostly works, as ZNC gets installed and configured, but as of this
+writing, the service does not automatically start at the end of the
+`chef-client` run.
 
 # Cookbooks
 
 This cookbook depends on the following external cookbooks:
 
 * [build-essential](http://community.opscode.com/cookbooks/build-essential) (Opscode)
+* [user](https://github.com/fnichol/chef-user) (fnichol)
 
 Recipes
 =======
@@ -49,7 +58,31 @@ This recipe installs ZNC from source.
 Attributes
 ==========
 
-TODO
+System Attributes
+-----------------
+
+Key                         | Type   | Description                            | Default
+--------------------------- | ------ | -------------------------------------- | --------------------
+`['znc']['install_method']` | String | `package` or `source`                  | `package`
+`['znc']['user']`           | String | user used to install and run ZNC       | `znc`
+`['znc']['group']`          | String | group used to install and run ZNC      | `znc`
+`['znc']['functions']`      | String | path to lsb/init.d functions           | _platform dependent_
+
+ZNC Attributes
+--------------
+
+Key                          | Type          | Description                        | Default
+---------------------------- | ------------- | ---------------------------------- | -------------------------------------
+`['znc']['data_dir']`        | String        | absolute path to store ZNC data    | _platform dependent_
+`['znc']['conf_dir']`        | String        | absolute path to store ZNC configs | `#{znc['data_dir']}/configs`
+`['znc']['log_dir']`         | String        | absolute path to store ZNC logs    | `#{znc['data_dir']}/moddata/adminlog`
+`['znc']['module_dir']`      | String        | absolute path to store ZNC modules | `#{znc['data_dir']}/modules`
+`['znc']['users_dir']`       | String        | absolute path to store ZNC users   | `#{znc['data_dir']}/users`
+`['znc']['users']`           | String Array  | list of users to add to ZNC        | `nil` (`[]` when using chef-solo)
+`['znc']['port']`            | String        | port for ZNC to listen on          | `+7777`
+`['znc']['skin']`            | String        | skin to use with ZNC               | `dark-clouds`
+`['znc']['max_buffer_size']` | Integer       | maximum buffer size                | `500`
+`['znc']['modules']`         | String Array  | ZNC modules to load                | `['webadmin', 'adminlog']`
 
 Testing
 =======
